@@ -37,6 +37,9 @@ jobs:
           echo "   Backend URL: https://systemprompt.me/api"
           echo "   API key: Stored securely in Cloudflare Worker"
           echo "   No config.js file will be deployed"
+          # Inject a per-deploy build marker (commit + timestamp) into the served HTML
+          sed -i "s|<!-- systemprompt.me build: repo=Decent-Software-LLC/systemprompt.me branch=main -->|<!-- systemprompt.me build: repo=Decent-Software-LLC/systemprompt.me sha=${GITHUB_SHA} run=${GITHUB_RUN_ID} at=$(date -u +%Y-%m-%dT%H:%M:%SZ) -->|" index.html
+          grep -o 'systemprompt.me build:[^>]*' index.html
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
