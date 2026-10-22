@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages with API Key
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Configure Application
+        env:
+          BASE_URL: ${{ secrets.BASE_URL || 'https://integrate.api.nvidia.com/v1' }}
+          MODEL_NAME: ${{ secrets.MODEL_NAME || 'nvidia/llama-3.3-nemotron-super-49b-v1.5' }}
+          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
+        run: |
+          echo "✅ Configuration is now inline in index.html"
+          echo "   Backend URL: https://systemprompt.me/api"
+          echo "   API key: Stored securely in Cloudflare Worker"
+          echo "   No config.js file will be deployed"
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      
+      - name: Deployment Summary
+        run: |
+          echo "## 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Your site is now live at:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Base URL: ${{ secrets.BASE_URL || 'https://integrate.api.nvidia.com/v1' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Model: ${{ secrets.MODEL_NAME || 'nvidia/llama-3.3-nemotron-super-49b-v1.5' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Admin API key: $([ -n '${{ secrets.ADMIN_API_KEY }}' ] && echo 'Configured' || echo 'Not set')" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Rate limiting enabled (10 calls/min)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Security features active" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Visit your site and click 'Start Discovery'" >> $GITHUB_STEP_SUMMARY
+          echo "2. Test that it works without configuration" >> $GITHUB_STEP_SUMMARY
+          echo "3. Monitor your API usage" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,2533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover your internal system prompt - the underlying beliefs, biases, and mental blockers shaping your decisions.">
+    <meta property="og:title" content="System Prompt Analyzer">
+    <meta property="og:description" content="Discover your internal system prompt through guided questions and AI analysis.">
+    <meta property="og:type" content="website">
+    <title>System Prompt Analyzer | Discover Your Mental Operating System</title>
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*; img-src 'self' data:; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🧠</text></svg>">
+    
+    <script src="config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        @media print {
+            /* Hide everything except results */
+            body > *:not(#results) {
+                display: none !important;
+            }
+            
+            #results {
+                display: block !important;
+                max-width: 100% !important;
+                padding: 0.3in 0.4in !important;
+                background: white !important;
+            }
+            
+            /* Hide buttons and interactive elements */
+            button, .no-print {
+                display: none !important;
+            }
+            
+            /* Hide title and subtitle for print */
+            #results > div > div:first-child {
+                display: none !important;
+            }
+            
+            /* Optimize cards for B&W printing - no borders, minimal spacing */
+            .result-card {
+                page-break-inside: avoid;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                background: white !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            
+            /* Clean typography for print - tighter line height */
+            .prose {
+                color: #000 !important;
+                font-size: 10.5pt;
+                line-height: 1.4;
+            }
+            
+            h1 {
+                color: #000 !important;
+                font-size: 20pt;
+                margin-bottom: 0.08in;
+                page-break-after: avoid;
+            }
+            
+            #results p {
+                color: #333 !important;
+                font-size: 9.5pt;
+                margin-bottom: 0 !important;
+            }
+            
+            h2 {
+                color: #000 !important;
+                font-size: 13pt;
+                font-weight: bold;
+                margin-top: 0.18in;
+                margin-bottom: 0.06in;
+                padding-bottom: 0 !important;
+                padding-top: 0 !important;
+                page-break-after: avoid;
+                border-bottom: none !important;
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+            }
+            
+            /* No top margin on first section header */
+            .result-card:first-child h2 {
+                margin-top: 0 !important;
+            }
+            
+            h3 {
+                color: #000 !important;
+                font-size: 11pt;
+                font-weight: bold;
+                margin-top: 0.08in;
+                margin-bottom: 0.05in;
+            }
+            
+            /* Minimal list formatting for print - no indentation */
+            .prose ul, .prose ol {
+                margin: 0.06in 0;
+                padding-left: 0 !important;
+                list-style-position: outside;
+            }
+            
+            .prose li {
+                margin-bottom: 0.06in;
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+                line-height: 1.35;
+            }
+            
+            .prose p {
+                margin-bottom: 0.06in;
+                margin-top: 0;
+            }
+            
+            .prose p:last-child {
+                margin-bottom: 0;
+            }
+            
+            /* Ensure strong text is visible */
+            strong {
+                font-weight: bold;
+                color: #000 !important;
+            }
+            
+            /* Page breaks and orphan/widow control */
+            .result-card {
+                page-break-inside: avoid;
+                orphans: 3;
+                widows: 3;
+            }
+            
+            /* Remove container spacing */
+            #results-content {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Additional typography refinements */
+            body {
+                orphans: 3;
+                widows: 3;
+            }
+            
+            /* AI-Optimized Versions Print Styles */
+            #ai-versions-print {
+                display: block !important;
+                margin-top: 0.25in;
+                overflow: visible !important;
+            }
+            
+            .page-break-before {
+                page-break-before: always;
+                padding-top: 0.15in;
+            }
+            
+            #ai-versions-print h2 {
+                font-size: 13pt;
+                margin-top: 0.1in;
+                margin-bottom: 0.12in;
+                border-bottom: 1.5pt solid #000 !important;
+                padding-bottom: 0.04in;
+                page-break-after: avoid;
+            }
+            
+            #ai-versions-print h3 {
+                font-size: 9.5pt;
+                margin-top: 0.1in;
+                margin-bottom: 0.04in;
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+                page-break-after: avoid;
+            }
+            
+            #ai-versions-print p {
+                font-size: 7.5pt;
+                margin-bottom: 0.04in;
+                font-style: italic;
+                color: #555 !important;
+            }
+            
+            #ai-versions-print .bg-gray-50 {
+                background: #fafafa !important;
+                border: 0.75pt solid #999 !important;
+                border-radius: 2pt;
+                padding: 0.1in;
+                font-size: 9pt;
+                line-height: 1.4;
+                font-family: 'Courier New', monospace;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow: visible !important;
+                page-break-inside: auto;
+                max-height: none !important;
+                height: auto !important;
+            }
+            
+            #ai-versions-print .mb-6 {
+                margin-bottom: 0.12in;
+                overflow: visible !important;
+            }
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .modal-overlay {
+            backdrop-filter: blur(4px);
+        }
+        
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result-card {
+            border-left: 4px solid #667eea;
+            transition: all 0.2s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateX(4px);
+            border-left-color: #764ba2;
+        }
+        
+        /* Enhanced prose styling for better readability */
+        .prose {
+            line-height: 1.75;
+        }
+        
+        .prose h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        
+        .prose h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .prose p {
+            margin-bottom: 1.25rem;
+        }
+        
+        .prose p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* List item spacing - minimal indentation */
+        .prose ul,
+        .prose ol {
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            padding-left: 0;
+            list-style-position: inside;
+        }
+        
+        .prose ol li,
+        .prose ul li {
+            margin-bottom: 1rem;
+            padding-left: 0;
+        }
+        
+        .prose ol li:last-child,
+        .prose ul li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .prose strong {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            .result-card {
+                padding: 1.25rem !important;
+                margin-bottom: 1rem;
+            }
+            
+            .result-card h2 {
+                font-size: 1.5rem;
+            }
+            
+            .prose {
+                font-size: 0.9375rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Landing Section -->
+    <section id="landing" class="min-h-screen gradient-bg flex items-center justify-center px-4">
+        <div class="max-w-4xl mx-auto text-center text-white fade-in">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                What's Your System Prompt?
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">
+                Every AI has a system prompt that shapes its behavior. So do you.
+            </p>
+            <p class="text-lg md:text-xl mb-8 opacity-80 max-w-2xl mx-auto">
+                Through guided questions and AI analysis, discover the underlying beliefs, biases, 
+                and mental blockers that form your internal operating system.
+            </p>
+            
+            <!-- Educational Section -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 mb-8 max-w-2xl mx-auto text-left">
+                <p class="text-base opacity-90 mb-3">
+                    <strong class="text-white">💡 Get the most from your analysis:</strong>
+                </p>
+                <p class="text-sm opacity-85 leading-relaxed">
+                    The quality of your insights depends on the honesty and detail of your answers. 
+                    The AI looks for patterns, emotions, and specific examples. Take your time—there's 
+                    no rush, and your answers are private and only for you.
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="startDiscovery()" class="bg-white text-purple-700 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition shadow-lg">
+                    Start Discovery
+                </button>
+                <div class="text-sm opacity-75">
+                    <p>🔒 Securely processed by AI, stored only in your browser</p>
+                    <p>⚠️ For self-learning only - AI can generate unexpected results</p>
+                </div>
+                <div class="mt-4" style="display: none;">
+                    <button onclick="showConfigModal()" class="text-white text-sm opacity-60 hover:opacity-100 transition underline">
+                        Advanced: Use Your Own API Key
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Questionnaire Section -->
+    <section id="questionnaire" class="hidden min-h-screen py-12 px-4">
+        <div class="flex max-w-6xl mx-auto gap-6">
+            <!-- Left Navigation Sidebar -->
+            <div id="question-nav" class="hidden lg:block w-64 flex-shrink-0">
+                <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+                    <h3 class="text-sm font-semibold text-gray-600 uppercase mb-4">Questions</h3>
+                    <nav id="question-list" class="space-y-2">
+                        <!-- Question nav items will be generated here -->
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 max-w-3xl">
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-gray-600">Question <span id="current-q">1</span> of <span id="total-q">10</span></span>
+                        <span class="text-sm font-medium text-purple-600" id="progress-percent">10%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="progress-bar h-2 rounded-full gradient-bg" style="width: 10%"></div>
+                    </div>
+                    <!-- Readiness Indicator -->
+                    <div id="readiness-indicator" class="mt-2 text-sm text-center hidden">
+                        <span id="readiness-message"></span>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div id="question-card" class="bg-white rounded-2xl shadow-xl p-8 md:p-12 slide-up">
+                <h2 id="question-text" class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
+                    Question will appear here
+                </h2>
+                <textarea 
+                    id="answer-input"
+                    rows="6"
+                    class="w-full border-2 border-gray-200 rounded-lg p-4 text-lg resize-none focus:border-purple-500 transition"
+                    placeholder="Share a specific example... What did you feel? What did you tell yourself?"
+                ></textarea>
+                <div id="char-counter" class="text-sm text-gray-500 mt-2 text-right">💭 Take your time to reflect...</div>
+                
+                <!-- Layer 4: Optional Reflection Tips -->
+                <details class="mt-3 text-sm">
+                    <summary class="text-purple-600 cursor-pointer hover:text-purple-700 font-medium">
+                        💡 Need help going deeper?
+                    </summary>
+                    <div class="mt-2 bg-purple-50 p-4 rounded-lg text-purple-900 border border-purple-100">
+                        <p class="font-semibold mb-2">Try answering these:</p>
+                        <ul id="reflection-tips" class="space-y-1 ml-4 text-sm">
+                            <!-- Tips will be dynamically inserted here -->
+                        </ul>
+                        <p class="mt-3 text-xs text-purple-700 italic">
+                            Remember: Honesty matters more than length. The AI identifies patterns across all your answers.
+                        </p>
+                    </div>
+                </details>
+                
+                <div class="mt-6 flex justify-between items-center">
+                    <button 
+                        id="prev-btn"
+                        onclick="previousQuestion()"
+                        class="text-gray-600 hover:text-gray-800 font-medium hidden"
+                    >
+                        ← Previous
+                    </button>
+                    <div class="flex-1"></div>
+                    <div class="flex gap-3 items-center">
+                        <button 
+                            id="analyze-early-btn"
+                            onclick="confirmEarlyAnalysis()"
+                            class="hidden bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+                        >
+                            ✓ Analyze Now
+                        </button>
+                        <button 
+                            id="next-btn"
+                            onclick="nextQuestion()"
+                            class="btn-primary text-white px-8 py-3 rounded-lg font-semibold"
+                        >
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Settings Link -->
+                <div class="mt-6 text-center" style="display: none;">
+                    <button onclick="showConfigModal()" class="text-sm text-gray-500 hover:text-gray-700">
+                        ⚙️ Advanced Settings
+                    </button>
+                    <div id="api-status-indicator" class="text-xs text-gray-400 mt-1"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="hidden min-h-screen py-8 md:py-12 px-4 bg-gray-50">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-8 md:mb-12">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-4">
+                    Your System Prompt Analysis
+                </h1>
+                <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+                    Here's what we discovered about your mental operating system
+                </p>
+            </div>
+
+            <div id="results-content" class="space-y-5 md:space-y-6">
+                <!-- Results will be populated here -->
+            </div>
+
+            <!-- AI-Optimized Versions for Print -->
+            <div id="ai-versions-print" class="hidden print:block mt-8 space-y-4">
+                <!-- Will be populated when AI optimization is run -->
+            </div>
+
+            <div class="mt-8 md:mt-12 flex flex-col sm:flex-row gap-3 md:gap-4 justify-center no-print">
+                <button onclick="copyForAI()" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md hover:shadow-lg">
+                    📋 Copy for AI Chat
+                </button>
+                <button onclick="printResults()" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition shadow-md hover:shadow-lg">
+                    🖨️ Print / Save PDF
+                </button>
+                <button onclick="startNewAnalysis()" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition shadow-md hover:shadow-lg">
+                    🔄 Start New Analysis
+                </button>
+            </div>
+            
+            <!-- Copy confirmation toast -->
+            <div id="copy-toast" class="hidden fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 fade-in">
+                ✓ Copied to clipboard! Ready to paste into your AI assistant
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Optimization Loading Modal -->
+    <div id="ai-optimize-loading" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center px-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Optimizing for AI Platforms</h3>
+            <p class="text-gray-600">Creating Quick, ChatGPT, and Claude-optimized versions...</p>
+            <p class="text-xs text-gray-400 mt-3">This can take up to a couple of minutes</p>
+        </div>
+    </div>
+
+    <!-- Format Selection Modal -->
+    <div id="format-selection-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center px-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Choose Your Format</h2>
+            <p class="text-gray-600 mb-6">We've optimized your analysis for different AI platforms. Select which version to copy:</p>
+            
+            <div class="space-y-4">
+                <!-- Quick Context Version -->
+                <div class="border-2 border-teal-200 rounded-xl p-4 hover:border-teal-400 transition cursor-pointer" onclick="copySelectedFormat('quick')">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <h3 class="text-lg font-semibold text-teal-700">Quick Context</h3>
+                            <p class="text-sm text-gray-600">Ultra-short, 300-500 characters</p>
+                        </div>
+                        <button class="bg-teal-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-teal-700 transition text-sm">
+                            Copy
+                        </button>
+                    </div>
+                    <div id="quick-preview" class="bg-gray-50 rounded p-3 text-xs text-gray-700 max-h-32 overflow-y-auto font-mono">
+                        Loading...
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Perfect for pasting at the top of any AI chat</p>
+                </div>
+                
+                <!-- ChatGPT Version -->
+                <div class="border-2 border-purple-200 rounded-xl p-4 hover:border-purple-400 transition cursor-pointer" onclick="copySelectedFormat('chatgpt')">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <h3 class="text-lg font-semibold text-purple-700">ChatGPT Custom Instructions</h3>
+                            <p class="text-sm text-gray-600">Ultra-condensed, under 1500 characters</p>
+                        </div>
+                        <button class="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition text-sm">
+                            Copy
+                        </button>
+                    </div>
+                    <div id="chatgpt-preview" class="bg-gray-50 rounded p-3 text-xs text-gray-700 max-h-32 overflow-y-auto font-mono">
+                        Loading...
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Perfect for ChatGPT's 1500 character limit</p>
+                </div>
+                
+                <!-- Claude/Full Version -->
+                <div class="border-2 border-blue-200 rounded-xl p-4 hover:border-blue-400 transition cursor-pointer" onclick="copySelectedFormat('claude')">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-700">Claude / Full Version</h3>
+                            <p class="text-sm text-gray-600">Detailed, ~1800-2500 characters</p>
+                        </div>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition text-sm">
+                            Copy
+                        </button>
+                    </div>
+                    <div id="claude-preview" class="bg-gray-50 rounded p-3 text-xs text-gray-700 max-h-32 overflow-y-auto font-mono">
+                        Loading...
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Ideal for Claude Projects, Gemini, or any AI chat</p>
+                </div>
+            </div>
+            
+            <button onclick="closeFormatModal()" class="mt-6 w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Config Modal -->
+    <div id="config-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center px-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto fade-in">
+            <!-- Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-gray-800">Advanced Settings</h2>
+                    <button onclick="closeConfigModal()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">
+                        ×
+                    </button>
+                </div>
+                <div id="using-default-notice" class="hidden mt-2 text-xs text-green-600">
+                    ✅ Using default configuration
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="px-6 py-4 space-y-4">
+                <!-- Base URL -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Base URL</label>
+                    <input 
+                        type="text" 
+                        id="base-url"
+                        class="w-full border-2 border-gray-200 rounded-lg p-2 text-sm"
+                        placeholder="https://your-api-endpoint.com/v1"
+                    />
+                    <div class="mt-1 flex gap-2">
+                        <button type="button" onclick="setDirectAPI()" class="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">
+                            Reset
+                        </button>
+                        <button type="button" id="cors-proxy-btn" onclick="setCORSProxy()" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-1 rounded" style="display: none;">
+                            🔧 CORS Proxy
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Model -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                    <input 
+                        type="text" 
+                        id="model-name"
+                        class="w-full border-2 border-gray-200 rounded-lg p-2 text-sm"
+                        placeholder="your-model-name"
+                    />
+                    <button type="button" onclick="resetModel()" class="mt-1 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded">
+                        Reset
+                    </button>
+                </div>
+                
+                <!-- API Key -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                    <input 
+                        type="password" 
+                        id="api-key"
+                        class="w-full border-2 border-gray-200 rounded-lg p-2 text-sm"
+                        placeholder="Leave empty for default (rate-limited)"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">
+                        Enter your own key for unlimited use
+                    </p>
+                </div>
+
+                <!-- Compact Notices -->
+                <div class="space-y-2 text-xs">
+                    <div class="flex items-start gap-2 text-gray-600">
+                        <span>🔒</span>
+                        <span>Data stays in your browser. Keys stored locally.</span>
+                    </div>
+                    <div id="rate-limit-notice" class="flex items-start gap-2 text-yellow-700">
+                        <span>⚠️</span>
+                        <span>Default key is rate-limited (10 calls/min)</span>
+                    </div>
+                </div>
+
+                <!-- Test Connection Status -->
+                <div id="test-status" class="hidden p-2 rounded-lg text-sm"></div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 rounded-b-2xl">
+                <div class="flex flex-col gap-2">
+                    <button 
+                        onclick="testConnection()"
+                        id="test-btn"
+                        class="w-full bg-green-600 text-white py-2.5 rounded-lg font-medium hover:bg-green-700 transition text-sm"
+                    >
+                        🧪 Test Connection
+                    </button>
+                    <div class="flex gap-2">
+                        <button 
+                            onclick="saveConfig()"
+                            class="flex-1 btn-primary text-white py-2.5 rounded-lg font-medium text-sm"
+                        >
+                            Save & Continue
+                        </button>
+                        <button 
+                            onclick="closeConfigModal()"
+                            class="px-4 text-gray-600 hover:text-gray-800 font-medium text-sm"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 modal-overlay flex items-center justify-center px-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+            <div class="flex items-center justify-center mb-4">
+                <div class="spinner mr-3"></div>
+                <h3 class="text-xl font-semibold text-gray-800" id="analysis-status">Analyzing Your Responses</h3>
+            </div>
+            <div class="mt-6 text-center text-gray-600" id="analysis-message">
+                Processing your answers and generating insights...
+            </div>
+            <div class="mt-4 text-center">
+                <button onclick="toggleThinking()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm" id="toggle-thinking-btn">
+                    👁️ Show AI Thinking
+                </button>
+                <div id="streaming-content" class="hidden mt-4 p-4 bg-gray-50 rounded-lg max-h-64 overflow-y-auto text-left text-xs text-gray-600 leading-relaxed whitespace-pre-wrap font-mono"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================================
+        // SECURITY ENHANCEMENTS
+        // ============================================================================
+        
+        // Enforce HTTPS in production
+        if (location.protocol !== 'https:' && 
+            location.hostname !== 'localhost' && 
+            location.hostname !== '127.0.0.1' && 
+            location.hostname !== '') {
+            location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        }
+
+        // HTML Sanitization Utilities
+        const SecurityUtils = {
+            // Escape HTML to prevent XSS
+            escapeHTML(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+            
+            // Sanitize HTML content
+            sanitizeHTML(html) {
+                if (!html) return '';
+                
+                // Create temporary element
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                
+                // Remove dangerous elements
+                const dangerous = ['script', 'iframe', 'object', 'embed', 'link', 'style'];
+                dangerous.forEach(tag => {
+                    const elements = temp.querySelectorAll(tag);
+                    elements.forEach(el => el.remove());
+                });
+                
+                // Remove event handler attributes
+                const allElements = temp.querySelectorAll('*');
+                allElements.forEach(el => {
+                    Array.from(el.attributes).forEach(attr => {
+                        if (attr.name.startsWith('on') || 
+                            attr.value.includes('javascript:')) {
+                            el.removeAttribute(attr.name);
+                        }
+                    });
+                });
+                
+                return temp.innerHTML;
+            }
+        };
+
+        // Input Sanitization for LLM Prompts
+        const InputSanitizer = {
+            MAX_ANSWER_LENGTH: 2000,  // 2K per answer = 20K max for all 10
+            MAX_TOTAL_LENGTH: 25000,  // Total safety limit (with overhead ~30K tokens input)
+            
+            INJECTION_PATTERNS: [
+                /ignore\s+(all\s+)?previous\s+(instructions?|rules?)/i,
+                /system\s*:/i,
+                /assistant\s*:/i,
+                /user\s*:/i,
+                /<\s*script/i,
+                /javascript\s*:/i,
+                /on\w+\s*=/i,
+            ],
+            
+            sanitizeAnswer(text) {
+                if (!text || typeof text !== 'string') return '';
+                
+                text = text.trim();
+                
+                // Length limit
+                if (text.length > this.MAX_ANSWER_LENGTH) {
+                    text = text.substring(0, this.MAX_ANSWER_LENGTH) + '... [truncated]';
+                }
+                
+                // Check for injection patterns
+                for (const pattern of this.INJECTION_PATTERNS) {
+                    if (pattern.test(text)) {
+                        text = text.replace(pattern, '[FILTERED]');
+                    }
+                }
+                
+                // Prevent code block injection
+                text = text.replace(/```/g, "'''");
+                text = text.replace(/\0/g, '');
+                
+                return text;
+            },
+            
+            validateAnswer(text) {
+                const MIN_LENGTH = 10;
+                
+                if (!text || text.trim().length === 0) {
+                    return { valid: false, error: 'Please provide an answer before continuing.' };
+                }
+                
+                if (text.length < MIN_LENGTH) {
+                    return { valid: false, error: `Answer too short. Please write at least ${MIN_LENGTH} characters.` };
+                }
+                
+                if (text.length > this.MAX_ANSWER_LENGTH) {
+                    return { valid: false, error: `Answer too long. Maximum ${this.MAX_ANSWER_LENGTH} characters. Current: ${text.length}` };
+                }
+                
+                // Check for spam
+                if (/(.)\1{50,}/.test(text)) {
+                    return { valid: false, error: 'Answer appears to contain spam (repeated characters).' };
+                }
+                
+                return { valid: true };
+            }
+        };
+
+        // Rate Limiter
+        class RateLimiter {
+            constructor(maxCalls = 10, windowMs = 60000) {
+                this.maxCalls = maxCalls;
+                this.windowMs = windowMs;
+                this.calls = [];
+            }
+            
+            check() {
+                const now = Date.now();
+                this.calls = this.calls.filter(time => now - time < this.windowMs);
+                
+                if (this.calls.length >= this.maxCalls) {
+                    const oldestCall = this.calls[0];
+                    const resetIn = Math.ceil((oldestCall + this.windowMs - now) / 1000);
+                    return { allowed: false, resetIn: resetIn };
+                }
+                
+                this.calls.push(now);
+                return { allowed: true, remaining: this.maxCalls - this.calls.length };
+            }
+        }
+
+        const apiRateLimiter = new RateLimiter(10, 60000); // 10 calls per minute
+        const testRateLimiter = new RateLimiter(5, 30000); // 5 tests per 30 seconds
+
+        // Secure logging (only in development)
+        const DEBUG = false;
+        function secureLog(...args) {
+            if (DEBUG && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+                console.log(...args);
+            }
+        }
+
+        // ============================================================================
+        // APPLICATION CODE
+        // ============================================================================
+        
+        // Application configuration (no external config.js needed)
+        const appConfig = {
+            // Backend proxy URL - API key is stored securely in Cloudflare Worker
+            defaultBaseURL: 'https://systemprompt.me/api',
+            defaultModel: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+            defaultApiKey: '',
+            adminApiKey: '', // Not used - Worker handles authentication
+            corsProxyURL: 'https://corsproxy.io/?',
+            autoDetectLocalhost: false
+        };
+
+        // State Management
+        const state = {
+            currentQuestionIndex: 0,
+            answers: [],
+            config: {
+                baseURL: appConfig.defaultBaseURL,
+                model: appConfig.defaultModel,
+                apiKey: appConfig.defaultApiKey || appConfig.adminApiKey || ''
+            }
+        };
+
+        // Questions - Ordered by insight value (Tier 1 = most critical first)
+        const questions = [
+            // TIER 1: Critical for pattern detection
+            {
+                id: 1,
+                text: "When you face a major setback or failure, what's the first thing you tell yourself?",
+                category: "self-talk",
+                placeholder: "I tell myself... (For example: 'I should have seen this coming' or 'This is just a temporary setback')",
+                tier: 1,
+                tips: [
+                    "Think of a recent specific setback - what exactly happened?",
+                    "What was the exact phrase that went through your mind?",
+                    "How did your body feel in that moment? (tight chest, sinking feeling, etc.)",
+                    "Did you blame yourself, others, or circumstances?"
+                ]
+            },
+            {
+                id: 5,
+                text: "What recurring thought or worry keeps coming back to you, even when you try to ignore it?",
+                category: "patterns",
+                placeholder: "The thought that keeps returning is... (When does it surface? What triggers it?)",
+                tier: 1,
+                tips: [
+                    "When does this thought typically appear? (night, before decisions, etc.)",
+                    "What situation or emotion triggers it?",
+                    "What are you afraid will happen if it's true?",
+                    "How long has this been recurring?"
+                ]
+            },
+            {
+                id: 10,
+                text: "What belief about yourself would you want to be true, but you're not sure you actually believe it?",
+                category: "beliefs",
+                placeholder: "I want to believe that I... but honestly, I'm not sure because...",
+                tier: 1,
+                tips: [
+                    "What do you tell others vs. what you tell yourself?",
+                    "What actions contradict this belief?",
+                    "What evidence would convince you it's true?",
+                    "When do you feel closest to believing it?"
+                ]
+            },
+            {
+                id: 7,
+                text: "What opportunity did you pass on that you still think about? What stopped you?",
+                category: "blockers",
+                placeholder: "I passed on... and what stopped me was... (Looking back, I feel...)",
+                tier: 1,
+                tips: [
+                    "What exactly was the opportunity?",
+                    "What fear or concern held you back?",
+                    "How do you feel about that decision now?",
+                    "What would you tell a friend in the same situation?"
+                ]
+            },
+            {
+                id: 4,
+                text: "When someone criticizes you, how do you typically interpret their feedback?",
+                category: "reactions",
+                placeholder: "When I receive criticism, I usually think... (My first reaction is typically...)",
+                tier: 1,
+                tips: [
+                    "Recall the last time you received criticism - what was it?",
+                    "What was your immediate thought before responding?",
+                    "Did you agree with it deep down, or reject it?",
+                    "How long did you think about it afterward?"
+                ]
+            },
+            // TIER 2: High value for comprehensive analysis
+            {
+                id: 8,
+                text: "How do you decide what deserves your time and energy? What's your priority framework?",
+                category: "values",
+                placeholder: "I prioritize things by... (What gets my time? What do I tend to put off?)",
+                tier: 2,
+                tips: [
+                    "Look at your calendar this week - what actually got your time?",
+                    "What do you consistently put off or avoid?",
+                    "What feels 'important' vs. what feels 'urgent'?",
+                    "When do you say yes when you mean no?"
+                ]
+            },
+            {
+                id: 6,
+                text: "If you could change one thing about how you approach challenges, what would it be and why?",
+                category: "self-awareness",
+                placeholder: "I would change... because... (What's holding me back from making this change?)",
+                tier: 2,
+                tips: [
+                    "Describe how you currently handle challenges",
+                    "What result would you prefer instead?",
+                    "What's stopping you from changing this?",
+                    "When have you seen others handle it better?"
+                ]
+            },
+            {
+                id: 3,
+                text: "What achievement are you most proud of, and why do you think you succeeded there?",
+                category: "strengths",
+                placeholder: "I'm most proud of... I succeeded because... (What did I do differently?)",
+                tier: 2,
+                tips: [
+                    "What was the specific achievement?",
+                    "What obstacles did you overcome?",
+                    "What skills or qualities did you use?",
+                    "Why does this one stand out above others?"
+                ]
+            },
+            // TIER 3: Supplemental for depth
+            {
+                id: 2,
+                text: "Complete this sentence: I would be more successful if only I...",
+                category: "limitations",
+                placeholder: "...had more confidence / ...stopped overthinking / ...took more risks / ...",
+                tier: 3,
+                tips: [
+                    "Give a specific example where this limitation showed up",
+                    "When did you first notice this about yourself?",
+                    "What would change in your life if you overcame it?",
+                    "Do others see this limitation in you, or is it internal?"
+                ]
+            },
+            {
+                id: 9,
+                text: "When you compare yourself to others, what thoughts typically arise?",
+                category: "biases",
+                placeholder: "When I compare myself, I think... (This makes me feel...)",
+                tier: 3,
+                tips: [
+                    "Who specifically do you compare yourself to?",
+                    "What do they have that you want?",
+                    "How does this comparison affect your actions?",
+                    "When does this comparison help vs. hurt you?"
+                ]
+            }
+        ];
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+            loadProgress();
+            applyLocalhostConfig();
+        });
+
+        // Auto-apply CORS proxy for localhost if configured
+        function applyLocalhostConfig() {
+            const isLocalhost = window.location.hostname === 'localhost' || 
+                               window.location.hostname === '127.0.0.1' ||
+                               window.location.hostname === '';
+            
+            // Show CORS proxy button only on localhost
+            const corsProxyBtn = document.getElementById('cors-proxy-btn');
+            if (corsProxyBtn) {
+                corsProxyBtn.style.display = isLocalhost ? 'inline-block' : 'none';
+            }
+            
+            if (isLocalhost && appConfig.autoDetectLocalhost) {
+                // Only apply proxy if not already using one and not already saved
+                const saved = localStorage.getItem('systemPromptConfig');
+                if (!saved && !state.config.baseURL.includes('corsproxy')) {
+                    console.log('🔧 Localhost detected - Auto-configuring CORS proxy for development');
+                    state.config.baseURL = appConfig.corsProxyURL + appConfig.defaultBaseURL;
+                }
+            }
+        }
+
+        // Config Management (SECURITY ENHANCED)
+        function loadConfig() {
+            // Load non-sensitive config from localStorage
+            const savedPublicConfig = localStorage.getItem('systemPromptPublicConfig');
+            if (savedPublicConfig) {
+                const config = JSON.parse(savedPublicConfig);
+                state.config.baseURL = config.baseURL;
+                state.config.model = config.model;
+            }
+            
+            // Load API key from sessionStorage (cleared on browser close)
+            const savedApiKey = sessionStorage.getItem('systemPromptApiKey');
+            if (savedApiKey) {
+                state.config.apiKey = savedApiKey;
+            } else {
+                state.config.apiKey = appConfig.defaultApiKey || appConfig.adminApiKey || '';
+            }
+        }
+
+        function saveConfig() {
+            const baseURL = document.getElementById('base-url').value.trim() || appConfig.defaultBaseURL;
+            const model = document.getElementById('model-name').value.trim() || appConfig.defaultModel;
+            const apiKey = document.getElementById('api-key').value.trim();
+
+            // Allow empty API key if default is available
+            const finalApiKey = apiKey || appConfig.adminApiKey || '';
+            
+            if (!finalApiKey) {
+                alert('No API key available. Please enter your API key or contact the site administrator.');
+                return;
+            }
+
+            // Validate API key format only if user provided one
+            if (apiKey && apiKey.length < 10) {
+                alert('API key seems too short. Please check and try again.');
+                return;
+            }
+
+            // Determine if user customized any settings
+            const hasCustomBaseURL = baseURL !== appConfig.defaultBaseURL;
+            const hasCustomModel = model !== appConfig.defaultModel;
+            const hasCustomKey = apiKey !== '';
+            
+            // Store public config in localStorage (only if customized)
+            if (hasCustomBaseURL || hasCustomModel) {
+                const publicConfig = { baseURL, model };
+                localStorage.setItem('systemPromptPublicConfig', JSON.stringify(publicConfig));
+            } else {
+                localStorage.removeItem('systemPromptPublicConfig');
+            }
+            
+            // Store custom API key in sessionStorage if provided
+            if (hasCustomKey) {
+                sessionStorage.setItem('systemPromptApiKey', apiKey);
+                sessionStorage.setItem('usingCustomKey', 'true');
+            } else {
+                sessionStorage.removeItem('systemPromptApiKey');
+                sessionStorage.removeItem('usingCustomKey');
+            }
+            
+            state.config = { baseURL, model, apiKey: finalApiKey };
+            
+            closeConfigModal();
+            startQuestionnaire();
+        }
+
+        function showConfigModal() {
+            // Load current config or defaults
+            document.getElementById('base-url').value = state.config.baseURL || appConfig.defaultBaseURL;
+            document.getElementById('model-name').value = state.config.model || appConfig.defaultModel;
+            
+            // Only show custom API key if user is using one
+            const usingCustomKey = sessionStorage.getItem('usingCustomKey') === 'true';
+            const customKey = sessionStorage.getItem('systemPromptApiKey') || '';
+            document.getElementById('api-key').value = usingCustomKey ? customKey : '';
+            
+            // Show notice if using default configuration
+            const hasDefaultKey = appConfig.adminApiKey && appConfig.adminApiKey.length > 0;
+            const usingDefaults = !usingCustomKey && 
+                                 state.config.baseURL === appConfig.defaultBaseURL &&
+                                 state.config.model === appConfig.defaultModel;
+            
+            const defaultNotice = document.getElementById('using-default-notice');
+            
+            if (hasDefaultKey && usingDefaults) {
+                defaultNotice.classList.remove('hidden');
+            } else {
+                defaultNotice.classList.add('hidden');
+            }
+            
+            // Hide test status from previous attempts
+            document.getElementById('test-status').classList.add('hidden');
+            
+            document.getElementById('config-modal').classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function setDirectAPI() {
+            document.getElementById('base-url').value = appConfig.defaultBaseURL;
+            showTestStatus('success', '✅ Reset to default API endpoint.');
+        }
+        
+        function resetModel() {
+            document.getElementById('model-name').value = appConfig.defaultModel;
+            showTestStatus('success', '✅ Reset to default model.');
+        }
+
+        function setCORSProxy() {
+            const warning = `⚠️ SECURITY WARNING ⚠️
+
+CORS Proxy routes ALL your API traffic through a third-party server.
+
+RISKS:
+• Your API key will be visible to the proxy operator
+• Your personal responses will pass through their servers
+• No guarantee of privacy or security
+
+ONLY use this for:
+• Local development testing
+• Learning how the app works
+
+For REAL USE, please deploy to:
+• GitHub Pages (free, 5 minutes)
+• Netlify, Vercel, or Cloudflare Pages
+
+Do you understand the risks and want to continue?`;
+            
+            if (!confirm(warning)) {
+                return;
+            }
+            
+            if (!confirm('Are you SURE? This exposes your API key to a third party.')) {
+                return;
+            }
+            
+            document.getElementById('base-url').value = appConfig.corsProxyURL + appConfig.defaultBaseURL;
+            showTestStatus('warning', '⚠️ CORS proxy enabled. Your API key is exposed to a third party!');
+        }
+
+        async function testConnection() {
+            // Rate limiting check
+            const rateCheck = testRateLimiter.check();
+            if (!rateCheck.allowed) {
+                showTestStatus('error', `❌ Too many test attempts. Please wait ${rateCheck.resetIn} seconds.`);
+                return;
+            }
+
+            const baseURL = document.getElementById('base-url').value.trim() || appConfig.defaultBaseURL;
+            const model = document.getElementById('model-name').value.trim() || appConfig.defaultModel;
+            const apiKey = document.getElementById('api-key').value.trim() || appConfig.adminApiKey || '';
+
+            // Check if using Worker endpoint (no API key needed) or custom endpoint (API key required)
+            const isUsingWorker = baseURL.includes('systemprompt.me/api');
+            if (!isUsingWorker && !apiKey) {
+                showTestStatus('error', '❌ Please enter an API key for custom endpoints');
+                return;
+            }
+
+            const testBtn = document.getElementById('test-btn');
+            const originalText = testBtn.textContent;
+            testBtn.textContent = '⏳ Testing...';
+            testBtn.disabled = true;
+
+            try {
+                secureLog('=== API Test Debug Info ===');
+                secureLog('Testing connection to:', `${baseURL}/chat/completions`);
+                secureLog('Using model:', model);
+                secureLog('API Key length:', apiKey.length);
+
+                const requestBody = {
+                    model: model,
+                    messages: [
+                        {
+                            role: 'user',
+                            content: 'Say "Connection successful!" in 3 words or less.'
+                        }
+                    ],
+                    max_tokens: 20,
+                    temperature: 0.7,
+                    stream: false
+                };
+
+                secureLog('Request body:', JSON.stringify(requestBody, null, 2));
+
+                // Build headers - only include Authorization if not using Worker
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (!isUsingWorker && apiKey) {
+                    headers['Authorization'] = `Bearer ${apiKey}`;
+                }
+
+                const response = await fetch(`${baseURL}/chat/completions`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(requestBody)
+                }).catch(err => {
+                    secureLog('Fetch error details:', err);
+                    throw err;
+                });
+
+                secureLog('Test response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    secureLog('Test error response:', errorText);
+                    
+                    let errorMessage = 'Connection failed';
+                    
+                    // Only show user-friendly messages
+                    if (response.status === 401) {
+                        errorMessage = 'Invalid API key';
+                    } else if (response.status === 403) {
+                        errorMessage = 'Access forbidden - check API key permissions';
+                    } else if (response.status === 429) {
+                        errorMessage = 'Rate limit exceeded';
+                    } else if (response.status >= 500) {
+                        errorMessage = 'Server error - try again later';
+                    } else {
+                        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                    }
+                    
+                    showTestStatus('error', `❌ ${errorMessage}`);
+                    return;
+                }
+
+                const data = await response.json();
+                secureLog('Test successful!', data);
+                
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    showTestStatus('success', `✅ Connection successful! Model responded: "${data.choices[0].message.content.trim()}"`);
+                } else {
+                    showTestStatus('success', '✅ Connection successful! API is responding correctly.');
+                }
+
+            } catch (error) {
+                secureLog('Test connection error:', error);
+                
+                let errorMsg = 'Connection failed';
+                
+                if (error.message === 'Failed to fetch') {
+                    errorMsg = 'Network request failed. Possible issues: Network connectivity, CORS, or invalid endpoint URL.';
+                } else {
+                    errorMsg = 'Connection failed. Please check your settings.';
+                }
+                
+                showTestStatus('error', `❌ ${errorMsg}`);
+            } finally {
+                testBtn.textContent = originalText;
+                testBtn.disabled = false;
+            }
+        }
+
+        function showTestStatus(type, message) {
+            const statusDiv = document.getElementById('test-status');
+            statusDiv.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'text-green-800', 'text-red-800', 'border', 'border-green-200', 'border-red-200');
+            
+            if (type === 'success') {
+                statusDiv.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
+            } else {
+                statusDiv.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+            }
+            
+            statusDiv.textContent = message;
+            statusDiv.classList.remove('hidden');
+        }
+
+        // Progress Management
+        function loadProgress() {
+            const saved = localStorage.getItem('systemPromptProgress');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                state.currentQuestionIndex = progress.currentQuestionIndex || 0;
+                state.answers = progress.answers || [];
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem('systemPromptProgress', JSON.stringify({
+                currentQuestionIndex: state.currentQuestionIndex,
+                answers: state.answers,
+                timestamp: new Date().toISOString()
+            }));
+        }
+
+        // New function to handle start button
+        function startDiscovery() {
+            // With Worker proxy, no API key needed - just start!
+            const isUsingWorker = state.config.baseURL.includes('systemprompt.me/api');
+            
+            if (isUsingWorker) {
+                // Worker handles authentication - start immediately
+                startQuestionnaire();
+            } else {
+                // Custom endpoint - check if user has provided their own key
+                const hasCustomKey = sessionStorage.getItem('systemPromptApiKey');
+                if (hasCustomKey) {
+                    state.config.apiKey = hasCustomKey;
+                    startQuestionnaire();
+                } else {
+                    // Need key for custom endpoint
+                    showConfigModal();
+                }
+            }
+        }
+
+        // Questionnaire
+        function startQuestionnaire() {
+            // Check if using Worker (no key needed) or custom endpoint (key required)
+            const isUsingWorker = state.config.baseURL.includes('systemprompt.me/api');
+            if (!isUsingWorker && !state.config.apiKey) {
+                showConfigModal();
+                return;
+            }
+
+            document.getElementById('landing').classList.add('hidden');
+            document.getElementById('questionnaire').classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+            
+            // Update API status indicator
+            updateAPIStatusIndicator();
+            
+            buildQuestionNav();
+            displayQuestion();
+        }
+        
+        // Show which configuration is being used
+        function updateAPIStatusIndicator() {
+            const indicator = document.getElementById('api-status-indicator');
+            const usingCustomKey = sessionStorage.getItem('usingCustomKey') === 'true';
+            const savedConfig = localStorage.getItem('systemPromptPublicConfig');
+            const hasCustomConfig = savedConfig !== null;
+            
+            if (usingCustomKey || hasCustomConfig) {
+                indicator.textContent = '🔑 Using custom configuration';
+                indicator.className = 'text-xs text-green-600 mt-1';
+            } else if (appConfig.adminApiKey) {
+                indicator.textContent = '✨ Using default configuration';
+                indicator.className = 'text-xs text-blue-600 mt-1';
+            } else {
+                indicator.textContent = '';
+            }
+        }
+
+        // Helper: Count answered questions
+        function getAnsweredCount() {
+            return state.answers.filter(answer => answer && answer.trim() !== '').length;
+        }
+        
+        // Helper: Check if ready to analyze (minimum 5 questions)
+        function canAnalyze() {
+            return getAnsweredCount() >= 5;
+        }
+        
+        // Helper: Get readiness message
+        function getReadinessMessage() {
+            const answered = getAnsweredCount();
+            const total = questions.length;
+            
+            if (answered < 5) {
+                return { message: '', className: '' };
+            } else if (answered === 5) {
+                return { 
+                    message: '✅ Ready to analyze! (5 more questions for deeper insights)',
+                    className: 'text-green-600 font-medium'
+                };
+            } else if (answered < 8) {
+                return { 
+                    message: `✨ Great coverage! (${total - answered} more for comprehensive analysis)`,
+                    className: 'text-blue-600 font-medium'
+                };
+            } else if (answered < 10) {
+                return { 
+                    message: `🌟 Excellent! (${total - answered} remaining for full analysis)`,
+                    className: 'text-purple-600 font-medium'
+                };
+            } else {
+                return { 
+                    message: '🎯 Perfect! All questions answered for maximum insight',
+                    className: 'text-green-600 font-semibold'
+                };
+            }
+        }
+
+        function buildQuestionNav() {
+            const navList = document.getElementById('question-list');
+            navList.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const isAnswered = state.answers[index] && state.answers[index].trim() !== '';
+                const isCurrent = index === state.currentQuestionIndex;
+                
+                const navItem = document.createElement('button');
+                navItem.className = `w-full text-left px-3 py-2 rounded-lg transition flex items-center gap-2 ${
+                    isCurrent 
+                        ? 'bg-purple-100 text-purple-700 font-semibold' 
+                        : isAnswered 
+                            ? 'bg-green-50 text-green-700 hover:bg-green-100' 
+                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`;
+                
+                navItem.onclick = () => jumpToQuestion(index);
+                
+                const icon = document.createElement('span');
+                icon.textContent = isAnswered ? '✓' : (index + 1);
+                icon.className = `flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                    isCurrent 
+                        ? 'bg-purple-600 text-white' 
+                        : isAnswered 
+                            ? 'bg-green-600 text-white' 
+                            : 'bg-gray-300 text-gray-600'
+                }`;
+                
+                const label = document.createElement('span');
+                label.className = 'text-sm truncate';
+                label.textContent = `Q${index + 1}: ${question.text.substring(0, 40)}...`;
+                
+                navItem.appendChild(icon);
+                navItem.appendChild(label);
+                navList.appendChild(navItem);
+            });
+        }
+
+        function jumpToQuestion(index) {
+            // Save current answer before jumping
+            const currentAnswer = document.getElementById('answer-input').value.trim();
+            if (currentAnswer) {
+                state.answers[state.currentQuestionIndex] = currentAnswer;
+                saveProgress();
+            }
+            
+            state.currentQuestionIndex = index;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[state.currentQuestionIndex];
+            const totalQuestions = questions.length;
+            const progress = ((state.currentQuestionIndex + 1) / totalQuestions) * 100;
+
+            document.getElementById('current-q').textContent = state.currentQuestionIndex + 1;
+            document.getElementById('total-q').textContent = totalQuestions;
+            document.getElementById('progress-percent').textContent = Math.round(progress) + '%';
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('question-text').textContent = question.text;
+            
+            // Set question-specific placeholder (Layer 2: Contextual Guidance)
+            const textarea = document.getElementById('answer-input');
+            textarea.placeholder = question.placeholder || "Share a specific example... What did you feel? What did you tell yourself?";
+            
+            // Set question-specific reflection tips (Layer 4: Customized Guidance)
+            const tipsContainer = document.getElementById('reflection-tips');
+            if (question.tips && question.tips.length > 0) {
+                tipsContainer.innerHTML = question.tips.map(tip => `<li>• ${tip}</li>`).join('');
+            } else {
+                // Fallback to generic tips if none specified
+                tipsContainer.innerHTML = `
+                    <li>• What specific situation or example comes to mind?</li>
+                    <li>• How did you feel emotionally?</li>
+                    <li>• What did you tell yourself in that moment?</li>
+                    <li>• Why does this matter to you?</li>
+                `;
+            }
+            
+            // Load saved answer if exists
+            const savedAnswer = state.answers[state.currentQuestionIndex];
+            textarea.value = savedAnswer || '';
+
+            // Update button visibility
+            if (state.currentQuestionIndex > 0) {
+                document.getElementById('prev-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('prev-btn').classList.add('hidden');
+            }
+
+            // Update readiness indicator
+            const readiness = getReadinessMessage();
+            const readinessIndicator = document.getElementById('readiness-indicator');
+            const readinessMessage = document.getElementById('readiness-message');
+            
+            if (readiness.message) {
+                readinessIndicator.classList.remove('hidden');
+                readinessMessage.textContent = readiness.message;
+                readinessMessage.className = readiness.className;
+            } else {
+                readinessIndicator.classList.add('hidden');
+            }
+
+            // Update button visibility and text
+            const nextBtn = document.getElementById('next-btn');
+            const analyzeEarlyBtn = document.getElementById('analyze-early-btn');
+            const answeredCount = getAnsweredCount();
+            const ready = canAnalyze();
+            
+            // Show "Analyze Now" button if ready and not on last question
+            if (ready && state.currentQuestionIndex < totalQuestions - 1) {
+                analyzeEarlyBtn.classList.remove('hidden');
+            } else {
+                analyzeEarlyBtn.classList.add('hidden');
+            }
+            
+            // Update "Next" button text
+            if (state.currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'Analyze →';
+            } else {
+                nextBtn.textContent = 'Next →';
+            }
+
+            // Update navigation highlighting
+            buildQuestionNav();
+
+            // Setup character counter (Layer 3: Smart Feedback)
+            const counter = document.getElementById('char-counter');
+            
+            function updateCharCounter() {
+                const length = textarea.value.length;
+                const max = InputSanitizer.MAX_ANSWER_LENGTH;
+                
+                // Reset classes
+                counter.className = 'text-sm mt-2 text-right';
+                
+                if (length === 0) {
+                    counter.textContent = '💭 Take your time to reflect...';
+                    counter.classList.add('text-gray-500');
+                } else if (length < 50) {
+                    counter.textContent = `${length} chars · Great start! Adding specific examples helps the AI understand you better.`;
+                    counter.classList.add('text-purple-600');
+                } else if (length < 150) {
+                    counter.textContent = `${length} chars · Good! Consider: What emotions came up? What specific situation?`;
+                    counter.classList.add('text-purple-600');
+                } else if (length < 300) {
+                    counter.textContent = `${length} chars · Excellent detail! ⭐`;
+                    counter.classList.add('text-green-600', 'font-medium');
+                } else if (length > max) {
+                    counter.textContent = `${length} / ${max} characters - TOO LONG`;
+                    counter.classList.add('text-red-600', 'font-semibold');
+                } else if (length > max * 0.9) {
+                    counter.textContent = `${length} / ${max} chars - Approaching limit`;
+                    counter.classList.add('text-orange-600', 'font-semibold');
+                } else {
+                    counter.textContent = `${length} chars · Outstanding reflection! 🌟`;
+                    counter.classList.add('text-green-600', 'font-semibold');
+                }
+            }
+            
+            // Remove old listener if exists and add new one
+            textarea.removeEventListener('input', updateCharCounter);
+            textarea.addEventListener('input', updateCharCounter);
+            updateCharCounter();
+
+            // Focus on textarea
+            textarea.focus();
+        }
+
+        function confirmEarlyAnalysis() {
+            const answeredCount = getAnsweredCount();
+            const remainingCount = questions.length - answeredCount;
+            
+            // Gentle encouragement without being pushy
+            const message = answeredCount === 5
+                ? `You've answered ${answeredCount} questions - enough for a good analysis!\n\nAnswering ${remainingCount} more questions would provide deeper insights and more comprehensive patterns.\n\nReady to analyze now, or continue with more questions?`
+                : `You've answered ${answeredCount} of ${questions.length} questions - great coverage!\n\n${remainingCount} more questions would give even richer insights.\n\nReady to analyze now?`;
+            
+            const proceed = confirm(message);
+            if (proceed) {
+                analyzeResponses();
+            }
+        }
+
+        function nextQuestion() {
+            const rawAnswer = document.getElementById('answer-input').value.trim();
+            
+            // Validate input
+            const validation = InputSanitizer.validateAnswer(rawAnswer);
+            if (!validation.valid) {
+                alert(validation.error);
+                return;
+            }
+
+            // Sanitize input
+            const sanitizedAnswer = InputSanitizer.sanitizeAnswer(rawAnswer);
+            
+            // Warn if content was modified
+            if (sanitizedAnswer !== rawAnswer && sanitizedAnswer.includes('[FILTERED]')) {
+                const proceed = confirm(
+                    'Your answer contained patterns that were filtered for security.\n\n' +
+                    'The filtered version will be saved. Continue?'
+                );
+                if (!proceed) return;
+            }
+
+            // Save sanitized answer
+            state.answers[state.currentQuestionIndex] = sanitizedAnswer;
+            saveProgress();
+
+            // Move to next question or analyze
+            if (state.currentQuestionIndex < questions.length - 1) {
+                state.currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                // On last question - check if we have minimum answers
+                if (canAnalyze()) {
+                    analyzeResponses();
+                } else {
+                    alert(`Please answer at least 5 questions before analyzing.\n\nYou've answered ${getAnsweredCount()} so far.`);
+                }
+            }
+        }
+
+        function previousQuestion() {
+            if (state.currentQuestionIndex > 0) {
+                state.currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // LLM Analysis
+        async function analyzeResponses() {
+            // Rate limiting check
+            const rateCheck = apiRateLimiter.check();
+            if (!rateCheck.allowed) {
+                alert(`Rate limit exceeded. Please wait ${rateCheck.resetIn} seconds before trying again.`);
+                return;
+            }
+
+            const loadingModal = document.getElementById('loading-modal');
+            const streamingContent = document.getElementById('streaming-content');
+            const statusEl = document.getElementById('analysis-status');
+            const messageEl = document.getElementById('analysis-message');
+            const toggleBtn = document.getElementById('toggle-thinking-btn');
+            
+            // Reset modal state
+            loadingModal.classList.remove('hidden');
+            streamingContent.textContent = '';
+            streamingContent.classList.add('hidden');
+            toggleBtn.textContent = '👁️ Show AI Thinking';
+            statusEl.textContent = 'Analyzing Your Responses';
+            messageEl.textContent = 'Processing your answers and generating insights...';
+
+            try {
+                const metaPrompt = buildMetaPrompt();
+                
+                secureLog('Making API request to:', `${state.config.baseURL}/chat/completions`);
+                secureLog('Using model:', state.config.model);
+                
+                // Build headers - only include Authorization if not using Worker
+                const isUsingWorker = state.config.baseURL.includes('systemprompt.me/api');
+                
+                // Enable streaming for all requests (Worker now supports it!)
+                const useStreaming = true;
+                
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/event-stream'
+                };
+                if (!isUsingWorker && state.config.apiKey) {
+                    headers['Authorization'] = `Bearer ${state.config.apiKey}`;
+                }
+
+                const response = await fetch(`${state.config.baseURL}/chat/completions`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        model: state.config.model,
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an insightful psychological analyst specializing in cognitive patterns, beliefs, and mental frameworks. Your analyses are empathetic, specific, and actionable.'
+                            },
+                            {
+                                role: 'user',
+                                content: metaPrompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 4000,  // Increased for full analysis
+                        stream: true
+                    })
+                });
+
+                secureLog('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    secureLog('API Error Response:', errorText);
+                    
+                    // User-friendly error messages
+                    let errorMessage = 'Analysis failed';
+                    
+                    if (response.status === 401) {
+                        errorMessage = 'Invalid API key';
+                    } else if (response.status === 403) {
+                        errorMessage = 'Access forbidden - check API key permissions';
+                    } else if (response.status === 429) {
+                        errorMessage = 'Rate limit exceeded - please wait and try again';
+                    } else if (response.status >= 500) {
+                        errorMessage = 'Server error - please try again later';
+                    } else {
+                        errorMessage = `API Error (${response.status})`;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+
+                // Handle streaming response
+                const statusEl = document.getElementById('analysis-status');
+                const messageEl = document.getElementById('analysis-message');
+                const streamingContent = document.getElementById('streaming-content');
+                
+                let inThinkingMode = false;
+                let thinkingContent = '';
+                let streamError = null; // Captures mid-stream error events (e.g. upstream rate limits)
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let analysis = '';
+                let buffer = ''; // Buffer for incomplete lines
+                
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    
+                    // CRITICAL: Use { stream: true } to handle multi-byte UTF-8 characters correctly
+                    const chunk = decoder.decode(value, { stream: true });
+                    buffer += chunk;
+                    const lines = buffer.split('\n');
+                    
+                    // Keep the last incomplete line in the buffer
+                    buffer = lines.pop() || '';
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            
+                            if (data === '[DONE]') {
+                                continue;
+                            }
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+
+                                // Some providers emit error events mid-stream (e.g. NVIDIA
+                                // "ResourceExhausted" rate limits). Surface them clearly.
+                                if (parsed.error) {
+                                    streamError = parsed.error.message || 'Upstream error';
+                                    continue;
+                                }
+
+                                const delta = parsed.choices?.[0]?.delta;
+                                // Reasoning models (e.g. Nemotron omni) stream thinking in
+                                // delta.reasoning_content; other models embed  tags in content.
+                                const reasoning = delta?.reasoning_content;
+                                const content = delta?.content;
+                                
+                                if (reasoning) {
+                                    inThinkingMode = true;
+                                    thinkingContent += reasoning;
+                                    statusEl.textContent = 'AI is thinking...';
+                                    messageEl.textContent = 'Analyzing patterns and generating insights';
+                                    
+                                    // Update thinking display if visible
+                                    if (!streamingContent.classList.contains('hidden')) {
+                                        streamingContent.textContent = thinkingContent.trim();
+                                        streamingContent.scrollTop = streamingContent.scrollHeight;
+                                    }
+                                }
+
+                                if (content) {
+                                    analysis += content;
+                                    
+                                    // Check if we're entering thinking mode
+                                    if (content.includes('<think>')) {
+                                        inThinkingMode = true;
+                                        statusEl.textContent = 'AI is thinking...';
+                                        messageEl.textContent = 'Analyzing patterns and generating insights';
+                                    }
+                                    
+                                    // Check if we're exiting thinking mode (must check before adding to thinkingContent)
+                                    if (content.includes('</think>')) {
+                                        inThinkingMode = false;
+                                        thinkingContent += content;
+                                        statusEl.textContent = 'Generating Report';
+                                        messageEl.textContent = 'Formatting your personalized analysis...';
+                                        
+                                        // Update thinking display one last time if visible
+                                        if (!streamingContent.classList.contains('hidden')) {
+                                            streamingContent.textContent = thinkingContent.replace(/<\/?think>/gi, '').trim();
+                                            streamingContent.scrollTop = streamingContent.scrollHeight;
+                                        }
+                                    }
+                                    // If in thinking mode (and didn't just close), accumulate thinking content
+                                    else if (inThinkingMode) {
+                                        thinkingContent += content;
+                                        
+                                        // Update thinking display if visible
+                                        if (!streamingContent.classList.contains('hidden')) {
+                                            streamingContent.textContent = thinkingContent.replace(/<\/?think>/gi, '').trim();
+                                            streamingContent.scrollTop = streamingContent.scrollHeight;
+                                        }
+                                    }
+                                    // After thinking, optionally show the output as it streams
+                                    else if (!content.includes('<think>')) {
+                                        // Update thinking display if visible (showing final output)
+                                        if (!streamingContent.classList.contains('hidden')) {
+                                            const displayText = analysis.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                                            streamingContent.textContent = displayText;
+                                            streamingContent.scrollTop = streamingContent.scrollHeight;
+                                        }
+                                    }
+                                }
+                            } catch (e) {
+                                // Ignore parse errors for incomplete chunks
+                            }
+                        }
+                    }
+                }
+                
+                // Flush any remaining bytes in the decoder
+                decoder.decode();
+                
+                // Process any remaining buffered line
+                if (buffer && buffer.startsWith('data: ')) {
+                    const data = buffer.slice(6);
+                    if (data !== '[DONE]') {
+                        try {
+                            const parsed = JSON.parse(data);
+                            const content = parsed.choices?.[0]?.delta?.content;
+                            if (content) {
+                                analysis += content;
+                            }
+                        } catch (e) {
+                            // Ignore parse errors
+                        }
+                    }
+                }
+                
+                statusEl.textContent = 'Analysis Complete!';
+                messageEl.textContent = 'Preparing your results...';
+                secureLog('API Response received (streaming complete)');
+                
+                // Strip any <think> tags from final analysis
+                analysis = analysis.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                
+                // If the stream died with an upstream error, report it clearly
+                if (streamError) {
+                    throw new Error(`The AI service was temporarily unavailable (${streamError}). Please try again.`);
+                }
+
+                // Check if we got a valid response
+                if (!analysis || analysis.length < 50) {
+                    throw new Error('API returned an empty or incomplete response. Please try again.');
+                }
+
+                // Save results
+                const results = {
+                    analysis,
+                    timestamp: new Date().toISOString(),
+                    answers: state.answers,
+                    questions: questions
+                };
+                localStorage.setItem('systemPromptResults', JSON.stringify(results));
+
+                displayResults(analysis);
+            } catch (error) {
+                secureLog('Analysis error:', error);
+                
+                let userMessage = `Failed to analyze responses: ${error.message}\n\n`;
+                
+                if (error.message === 'Failed to fetch') {
+                    userMessage += `Network request failed.\n\n`;
+                    userMessage += `Please check:\n`;
+                    userMessage += `• Network connectivity\n`;
+                    userMessage += `• API endpoint URL\n`;
+                    userMessage += `• API key validity\n\n`;
+                    userMessage += `Your answers are saved locally.`;
+                } else {
+                    userMessage += `Please check your API configuration and try again.\n\n`;
+                    userMessage += `Your answers are saved locally.`;
+                }
+                
+                alert(userMessage);
+            } finally {
+                document.getElementById('loading-modal').classList.add('hidden');
+            }
+        }
+
+        function buildMetaPrompt() {
+            // Token budget calculation:
+            // - Model: Llama 3.3 Nemotron (128K context window)
+            // - Input budget: ~30K tokens (leaves 98K for output + safety margin)
+            // - MAX_TOTAL_LENGTH: 25K chars = ~6,250 tokens (user answers)
+            // - Meta-prompt: ~2K chars = ~500 tokens
+            // - Questions: ~1K chars = ~250 tokens
+            // - Total input: ~7,000 tokens
+            // - Output requested: 4,000 tokens
+            // - Grand total: ~11,000 tokens (8.5% of context window)
+            
+            let prompt = `I need you to analyze a person's responses to discover their internal "system prompt" - the underlying beliefs, biases, and mental blockers that shape their worldview and decisions.
+
+Below are their responses to a series of introspective questions (they answered ${getAnsweredCount()} out of ${questions.length} questions):
+
+`;
+
+            let totalLength = 0;
+            let answeredQuestions = 0;
+            questions.forEach((q, i) => {
+                // Re-sanitize answers for extra safety
+                const sanitizedAnswer = InputSanitizer.sanitizeAnswer(state.answers[i] || '');
+                
+                // Only include answered questions
+                if (sanitizedAnswer && sanitizedAnswer.trim().length > 0) {
+                    totalLength += sanitizedAnswer.length;
+                    answeredQuestions++;
+                    
+                    prompt += `**Question ${answeredQuestions}:** ${q.text}\n`;
+                    prompt += `**Response:** ${sanitizedAnswer}\n\n`;
+                }
+            });
+            
+            // Check total length
+            if (totalLength > InputSanitizer.MAX_TOTAL_LENGTH) {
+                throw new Error('Combined answers too long. Please shorten your responses.');
+            }
+
+            prompt += `
+Based on these responses, please provide a comprehensive analysis structured EXACTLY as follows. Use these exact section headers:
+
+## YOUR SYSTEM PROMPT
+Write this in the style of an AI system prompt, starting with "You are...". Synthesize their responses into 2-3 sentences that describe the core operating principles, beliefs, and assumptions that drive their behavior and decisions. Format it as if programming their mental operating system.
+
+## IDENTIFIED BLOCKERS
+List 3-5 specific mental barriers or self-imposed limitations that are holding them back. Be specific and reference their actual responses.
+
+## COGNITIVE BIASES
+Identify 2-4 thinking patterns or cognitive biases evident in their responses (e.g., negativity bias, imposter syndrome, perfectionism, comparison trap, etc.). Explain how these manifest.
+
+## STRENGTHS & ASSETS
+Highlight 3-4 positive aspects of their mental framework - areas of self-awareness, resilience, or healthy perspectives.
+
+## GROWTH OPPORTUNITIES
+Provide EXACTLY 5 specific, actionable recommendations for how they can evolve their mental operating system. Number them 1-5. These should be concrete practices or mindset shifts, not generic advice.
+
+## FINAL NOTE
+Write 2-3 sentences of empathetic encouragement that acknowledges their journey and the work they've already done. Speak directly to them with warmth and affirmation.
+
+IMPORTANT: Use ONLY the section headers listed above. Do not add "Closing Note:" or any other labels. Focus on patterns across their actual responses. Make insights specific to their words, not generic psychological advice.`;
+
+            return prompt;
+        }
+
+        // Results Display - Split by sections, render each with marked.js
+        function displayResults(analysis) {
+            document.getElementById('questionnaire').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            window.scrollTo(0, 0);
+
+            const resultsContainer = document.getElementById('results-content');
+            
+            // Split by ## headers (but keep the headers)
+            // The AI now provides consistent structure with explicit ## FINAL NOTE section
+            const sections = [];
+            const parts = analysis.split(/^## /gm);
+            
+            // First part is before any headers (if exists)
+            if (parts[0].trim()) {
+                sections.push({
+                    title: null,
+                    content: parts[0].trim()
+                });
+            }
+            
+            // Process remaining parts (each starts with a header)
+            for (let i = 1; i < parts.length; i++) {
+                const lines = parts[i].split('\n');
+                const title = lines[0].trim();
+                const content = lines.slice(1).join('\n').trim();
+                
+                sections.push({
+                    title: title,
+                    content: content
+                });
+            }
+            
+            // Render each section with improved styling
+            let html = '';
+            sections.forEach(section => {
+                if (section.title) {
+                    // Section with title - separate card
+                    const contentHtml = marked.parse(section.content);
+                    html += `
+                        <div class="result-card bg-white rounded-xl shadow-md hover:shadow-lg p-5 md:p-8 border border-gray-100">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200">
+                                ${section.title}
+                            </h2>
+                            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                                ${contentHtml}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Content without title (intro text)
+                    const contentHtml = marked.parse(section.content);
+                    html += `
+                        <div class="result-card bg-white rounded-xl shadow-md hover:shadow-lg p-5 md:p-8 border border-gray-100">
+                            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                                ${contentHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            resultsContainer.innerHTML = html;
+        }
+
+
+        // Toggle thinking display
+        function toggleThinking() {
+            const streamingContent = document.getElementById('streaming-content');
+            const toggleBtn = document.getElementById('toggle-thinking-btn');
+            
+            if (streamingContent.classList.contains('hidden')) {
+                streamingContent.classList.remove('hidden');
+                toggleBtn.textContent = '👁️ Hide AI Thinking';
+            } else {
+                streamingContent.classList.add('hidden');
+                toggleBtn.textContent = '👁️ Show AI Thinking';
+            }
+        }
+
+        // Store optimized versions globally with cache validation
+        let optimizedVersions = {
+            quick: '',
+            chatgpt: '',
+            claude: '',
+            analysisHash: null
+        };
+
+        // Copy for AI Chat - AI-powered optimization with caching
+        async function copyForAI() {
+            const results = localStorage.getItem('systemPromptResults');
+            if (!results) {
+                alert('No analysis found. Please complete the questionnaire first.');
+                return;
+            }
+            
+            const data = JSON.parse(results);
+            let analysis = data.analysis;
+            
+            // Check if we already have cached optimized versions for this analysis
+            if (optimizedVersions.quick && optimizedVersions.chatgpt && optimizedVersions.claude && optimizedVersions.analysisHash === hashString(analysis)) {
+                // Use cached versions
+                showFormatSelectionModal();
+                return;
+            }
+            
+            // Show loading modal
+            document.getElementById('ai-optimize-loading').classList.remove('hidden');
+            
+            try {
+                // Call API to optimize the analysis
+                const optimized = await optimizeForAIPlatforms(analysis);
+                
+                // Store the optimized versions with hash for cache validation
+                optimizedVersions.quick = optimized.quick;
+                optimizedVersions.chatgpt = optimized.chatgpt;
+                optimizedVersions.claude = optimized.claude;
+                optimizedVersions.analysisHash = hashString(analysis);
+                
+                // Hide loading modal
+                document.getElementById('ai-optimize-loading').classList.add('hidden');
+                
+                // Show format selection modal with previews
+                showFormatSelectionModal();
+                
+            } catch (error) {
+                document.getElementById('ai-optimize-loading').classList.add('hidden');
+                console.error('Optimization error:', error);
+                secureLog('Optimization error:', error);
+                alert(`Failed to optimize analysis: ${error.message || error}\n\nPlease try again or check your connection.`);
+            }
+        }
+        
+        // Simple hash function for cache validation
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash;
+        }
+        
+        async function optimizeForAIPlatforms(analysis) {
+            // Rate limiting check
+            const rateCheck = apiRateLimiter.check();
+            if (!rateCheck.allowed) {
+                throw new Error(`Rate limit exceeded. Please wait ${rateCheck.resetIn} seconds.`);
+            }
+            
+            const optimizationPrompt = `You are an expert at condensing psychological analyses for use in AI assistant custom instructions. I need you to create THREE optimized versions of this analysis.
+
+VERSION 1 - QUICK CONTEXT:
+- CRITICAL: MUST be 300-500 characters (ultra-short for pasting at top of any chat)
+- One paragraph summarizing: core identity, 2 key patterns/blockers, 1 strength, brief directive
+- Designed to paste at the start of ANY AI conversation for instant personalization
+- Plain, conversational language: "I'm [identity]. Key patterns: [patterns]. Help me [directive]."
+- DO NOT include character counts or meta-information in the output
+
+VERSION 2 - CHATGPT CUSTOM INSTRUCTIONS:
+- CRITICAL: MUST be under 1500 characters (aim for 1300-1400 to be safe)
+- Ultra-condensed while preserving core essence
+- Include: brief system prompt (2-3 sentences), top 2-3 blockers, top 2 biases, directive for AI
+- Clear, actionable format
+- DO NOT include character counts or meta-information in the output
+
+VERSION 3 - CLAUDE/FULL VERSION:
+- CRITICAL: MUST be 1800-2500 characters (detailed but concise)
+- FORMAT AS INSTRUCTIONS FOR THE AI, not as a report about the user
+- Start with: "When interacting with this user..." or "Context for personalized assistance:"
+- Frame everything as directives: "Be aware that they...", "Account for their tendency to...", "Build on their strength of...", "When they share setbacks, remember they..."
+- Include ALL of: their mental operating system, ALL 4 blockers (how you should respond), ALL 4 biases (how to challenge them), ALL 4 strengths (how to leverage), ALL 5 growth tactics (how to encourage), final directive
+- Write in second-person addressing the AI: "You should...", "Frame advice by...", "Avoid reinforcing their..."
+- Each section should give the AI actionable guidance on HOW to interact
+- Use plain text (no markdown: no **, no *, no #)
+- DO NOT include character counts or meta-information in the output
+
+FORMATTING REQUIREMENTS (ALL VERSIONS):
+1. Start each version with ONLY the marker: "=== QUICK CONTEXT ===", "=== CHATGPT VERSION ===", and "=== CLAUDE VERSION ==="
+2. Use plain text (no markdown: no **, no *, no #)
+3. Remove ALL question references like (Q1, Q7)
+4. For ChatGPT/Claude: Use clear section headers like "System prompt:", "Key blockers:", etc.
+5. For ChatGPT/Claude: Number items as 1), 2), 3) for clarity
+6. For Quick Context: Single flowing paragraph, conversational tone
+7. DO NOT ADD CHARACTER COUNTS - the text should end naturally without meta-commentary
+
+HERE IS THE FULL ANALYSIS TO OPTIMIZE:
+
+${analysis}
+
+EXAMPLE FORMAT FOR CLAUDE VERSION:
+"CONTEXT FOR PERSONALIZED ASSISTANCE:
+
+When interacting with this user, understand that they are responsibility-driven and prioritize family/legacy above personal achievement. Their mental operating system [detailed explanation].
+
+KEY PATTERNS TO ACCOUNT FOR:
+
+1) Emotional suppression: When they discuss challenges, be aware they may intellectualize feelings rather than expressing them. Gently encourage emotional articulation by asking 'How did that make you feel?' rather than only problem-solving.
+
+2) Regret-driven paralysis: They ruminate on past decisions. Avoid reinforcing this by challenging 'what if' thinking. Frame past choices as valuable learning experiences. When they express regret, redirect to present-moment actions.
+
+[Continue for all blockers, biases, strengths with specific HOW-TO guidance for the AI...]"
+
+IMPORTANT REMINDERS:
+- Quick Context: 300-500 chars, single paragraph, conversational ("I'm... Key patterns:... Help me...")
+- ChatGPT version: under 1500 chars, condensed, actionable
+- Claude version: 1800-2500 chars, WRITTEN AS INSTRUCTIONS FOR THE AI (not a report about the user)
+- NO character counts in the output
+- NO markdown formatting (no **, no *, no #)
+- Start each with only the === marker`;
+
+            const isUsingWorker = state.config.baseURL.includes('systemprompt.me/api');
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (!isUsingWorker && state.config.apiKey) {
+                headers['Authorization'] = `Bearer ${state.config.apiKey}`;
+            }
+
+            const response = await fetch(`${state.config.baseURL}/chat/completions`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    model: state.config.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert at condensing psychological analyses into actionable formats for AI assistants. You follow character limits precisely.'
+                        },
+                        {
+                            role: 'user',
+                            content: optimizationPrompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 4000,
+                    // Muse Glimmer is a reasoning model; dial thinking down so the
+                    // budget isn't consumed by reasoning_content (which left content
+                    // null at the old 3000 cap). This task doesn't need deep reasoning.
+                    reasoning_effort: 'minimal',
+                    stream: true
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            // Stream the response so the Worker does not time out waiting for
+            // the full (slow, ~2min) non-streaming completion.
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let optimizedText = "";
+            let buffer = "";
+            while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split("\n");
+                buffer = lines.pop() || "";
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed === "" || trimmed.startsWith(":")) continue;
+                    const lineData = trimmed.startsWith("data: ")?trimmed.slice(6).trim():trimmed;
+                    if (!lineData.startsWith("{")) continue;
+                    const parsed = JSON.parse(lineData);
+                    const content = parsed.choices?.[0]?.delta?.content;
+                    if (content) optimizedText += content;
+                }
+            }
+            optimizedText = optimizedText.trim();
+            if (!optimizedText) {
+                throw new Error("The AI did not return optimized versions. Please try again.");
+            }
+            
+            // Parse the three versions
+            const quickMatch = optimizedText.match(/=== QUICK CONTEXT ===\s*([\s\S]*?)(?:=== CHATGPT VERSION ===|$)/i);
+            const chatgptMatch = optimizedText.match(/=== CHATGPT VERSION ===\s*([\s\S]*?)(?:=== CLAUDE VERSION ===|$)/i);
+            const claudeMatch = optimizedText.match(/=== CLAUDE VERSION ===\s*([\s\S]*?)$/i);
+            
+            // Clean up the extracted text - remove character counts and meta-info
+            const cleanVersion = (text) => {
+                return text
+                    .replace(/\(Characters?:?\s*\d+[,\d]*\)/gi, '')  // Remove (Characters: 1489)
+                    .replace(/\(Char count:?\s*\d+[,\d]*\)/gi, '')   // Remove (Char count: 1489)
+                    .replace(/\[?\d+[,\d]*\s*characters?\]?/gi, '')  // Remove [1489 characters]
+                    .replace(/Character count:?\s*\d+[,\d]*/gi, '')  // Remove Character count: 1489
+                    .trim();
+            };
+            
+            return {
+                quick: quickMatch ? cleanVersion(quickMatch[1]) : cleanVersion(optimizedText.substring(0, 500)),
+                chatgpt: chatgptMatch ? cleanVersion(chatgptMatch[1]) : cleanVersion(optimizedText.substring(0, 1500)),
+                claude: claudeMatch ? cleanVersion(claudeMatch[1]) : cleanVersion(optimizedText)
+            };
+        }
+        
+        function showFormatSelectionModal() {
+            // Update previews
+            document.getElementById('quick-preview').textContent = optimizedVersions.quick.substring(0, 150) + '...';
+            document.getElementById('chatgpt-preview').textContent = optimizedVersions.chatgpt.substring(0, 200) + '...';
+            document.getElementById('claude-preview').textContent = optimizedVersions.claude.substring(0, 200) + '...';
+            
+            // Update print section with AI-optimized versions
+            updatePrintVersions();
+            
+            // Show modal
+            document.getElementById('format-selection-modal').classList.remove('hidden');
+        }
+        
+        function updatePrintVersions() {
+            const printContainer = document.getElementById('ai-versions-print');
+            
+            // Only populate if we have optimized versions
+            if (optimizedVersions.quick || optimizedVersions.chatgpt || optimizedVersions.claude) {
+                let html = '<div class="page-break-before"><h2 class="text-xl font-bold text-gray-900 mb-4 pb-2 border-b-2 border-gray-300">AI-OPTIMIZED VERSIONS</h2>';
+                
+                if (optimizedVersions.quick) {
+                    html += `
+                        <div class="mb-6">
+                            <h3 class="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Quick Context (300-500 chars)</h3>
+                            <p class="text-xs text-gray-600 mb-2 italic">Paste at the top of any AI chat for instant personalization</p>
+                            <div class="bg-gray-50 border border-gray-300 rounded p-3 text-sm whitespace-pre-wrap font-mono">${escapeHtml(optimizedVersions.quick)}</div>
+                        </div>
+                    `;
+                }
+                
+                if (optimizedVersions.chatgpt) {
+                    html += `
+                        <div class="mb-6">
+                            <h3 class="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">ChatGPT Custom Instructions (Under 1500 chars)</h3>
+                            <p class="text-xs text-gray-600 mb-2 italic">Settings → Personalization → Custom Instructions</p>
+                            <div class="bg-gray-50 border border-gray-300 rounded p-3 text-sm whitespace-pre-wrap font-mono">${escapeHtml(optimizedVersions.chatgpt)}</div>
+                        </div>
+                    `;
+                }
+                
+                if (optimizedVersions.claude) {
+                    html += `
+                        <div class="mb-6">
+                            <h3 class="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Claude/Full Version (1800-2500 chars)</h3>
+                            <p class="text-xs text-gray-600 mb-2 italic">Claude Projects → Add Custom Instructions</p>
+                            <div class="bg-gray-50 border border-gray-300 rounded p-3 text-sm whitespace-pre-wrap font-mono">${escapeHtml(optimizedVersions.claude)}</div>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+                printContainer.innerHTML = html;
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function closeFormatModal() {
+            document.getElementById('format-selection-modal').classList.add('hidden');
+        }
+        
+        async function copySelectedFormat(format) {
+            const textToCopy = optimizedVersions[format];
+            
+            if (!textToCopy) {
+                alert('Format not available. Please try again.');
+                return;
+            }
+            
+            // Copy to clipboard
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+            } catch (err) {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+            
+            // Close modal and show success
+            closeFormatModal();
+            showCopyToast();
+        }
+        
+        function showCopyToast() {
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Actions
+        function printResults() {
+            // Simple print - browser handles everything including "Save as PDF"
+            window.print();
+        }
+
+        function startNewAnalysis() {
+            if (confirm('Start a new analysis? This will clear your current responses and results. Continue?')) {
+                // Clear localStorage
+                localStorage.removeItem('systemPromptConfig');
+                localStorage.removeItem('systemPromptPublicConfig');
+                localStorage.removeItem('systemPromptProgress');
+                localStorage.removeItem('systemPromptResults');
+                
+                // Clear sessionStorage
+                sessionStorage.removeItem('systemPromptApiKey');
+                
+                // Clear cached AI optimizations
+                optimizedVersions = {
+                    quick: '',
+                    chatgpt: '',
+                    claude: '',
+                    analysisHash: null
+                };
+                
+                // Reset state
+                state.currentQuestionIndex = 0;
+                state.answers = [];
+                
+                // Return to landing
+                document.getElementById('results').classList.add('hidden');
+                document.getElementById('landing').classList.remove('hidden');
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                const questionnaireVisible = !document.getElementById('questionnaire').classList.contains('hidden');
+                if (questionnaireVisible) {
+                    nextQuestion();
+                }
+            }
+        });
+
+        // ============================================================================
+        // GLOBAL ERROR HANDLERS (LOW SEVERITY FIX)
+        // ============================================================================
+        
+        // Catch unhandled errors
+        window.addEventListener('error', (event) => {
+            secureLog('Global error caught:', event.error);
+            
+            // Save progress before potential crash
+            try {
+                saveProgress();
+            } catch (e) {
+                secureLog('Failed to save progress during error:', e);
+            }
+            
+            // Show user-friendly message
+            alert('An unexpected error occurred. Your progress has been saved. Please refresh the page if problems continue.');
+            
+            // Prevent default browser error handling
+            event.preventDefault();
+        });
+
+        // Catch unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            secureLog('Unhandled promise rejection:', event.reason);
+            
+            // Try to save progress
+            try {
+                saveProgress();
+            } catch (e) {
+                secureLog('Failed to save progress during rejection:', e);
+            }
+            
+            // Show user-friendly message
+            alert('A background error occurred. Your progress has been saved. Please try again.');
+            
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
+
