@@ -908,7 +908,7 @@
         const appConfig = {
             // Backend proxy URL - API key is stored securely in Cloudflare Worker
             defaultBaseURL: 'https://systemprompt.me/api',
-            defaultModel: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+            defaultModel: 'meta/muse-glimmer-30b',
             defaultApiKey: '',
             adminApiKey: '', // Not used - Worker handles authentication
             corsProxyURL: 'https://corsproxy.io/?',
@@ -1983,7 +1983,7 @@ Do you understand the risks and want to continue?`;
 
         function buildMetaPrompt() {
             // Token budget calculation:
-            // - Model: Llama 3.3 Nemotron (128K context window)
+            // - Model: Muse Glimmer 30B (reasoning model)
             // - Input budget: ~30K tokens (leaves 98K for output + safety margin)
             // - MAX_TOTAL_LENGTH: 25K chars = ~6,250 tokens (user answers)
             // - Meta-prompt: ~2K chars = ~500 tokens

@@ -69,7 +69,7 @@ You need an OpenAI-compatible API key. Options:
 
 **Optional secrets** (uses defaults if not set):
 - `BASE_URL` - API endpoint (default: `https://integrate.api.nvidia.com/v1`)
-- `MODEL_NAME` - Model to use (default: `nvidia/llama-3.3-nemotron-super-49b-v1.5`)
+- `MODEL_NAME` - Model to use (default: `meta/muse-glimmer-30b`)
 
 #### 4. Enable GitHub Pages
 
@@ -97,7 +97,7 @@ Configure these in GitHub Secrets for automatic deployment:
 |--------|----------|---------|-------------|
 | `ADMIN_API_KEY` | ✅ Yes | - | Your API key for the AI service |
 | `BASE_URL` | ❌ Optional | `https://integrate.api.nvidia.com/v1` | API endpoint URL |
-| `MODEL_NAME` | ❌ Optional | `nvidia/llama-3.3-nemotron-super-49b-v1.5` | AI model identifier |
+| `MODEL_NAME` | ❌ Optional | `meta/muse-glimmer-30b` | AI model identifier |
 
 ### Local Development
 

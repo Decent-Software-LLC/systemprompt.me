@@ -30,7 +30,7 @@ jobs:
       - name: Configure Application
         env:
           BASE_URL: ${{ secrets.BASE_URL || 'https://integrate.api.nvidia.com/v1' }}
-          MODEL_NAME: ${{ secrets.MODEL_NAME || 'nvidia/llama-3.3-nemotron-super-49b-v1.5' }}
+          MODEL_NAME: ${{ secrets.MODEL_NAME || 'meta/muse-glimmer-30b' }}
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
         run: |
           echo "✅ Configuration is now inline in index.html"
@@ -59,7 +59,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Configuration" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Base URL: ${{ secrets.BASE_URL || 'https://integrate.api.nvidia.com/v1' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Model: ${{ secrets.MODEL_NAME || 'nvidia/llama-3.3-nemotron-super-49b-v1.5' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Model: ${{ secrets.MODEL_NAME || 'meta/muse-glimmer-30b' }}" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Admin API key: $([ -n '${{ secrets.ADMIN_API_KEY }}' ] && echo 'Configured' || echo 'Not set')" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Rate limiting enabled (10 calls/min)" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Security features active" >> $GITHUB_STEP_SUMMARY
